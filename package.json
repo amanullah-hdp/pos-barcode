@@ -16,7 +16,8 @@
     "desktop:prepare": "node scripts/prepare-desktop-pack.mjs",
     "desktop:dev": "npm run build && npm run build:main -w barcode-pos-desktop && npm run dev -w barcode-pos-desktop",
     "desktop:pack:mac": "npm run build && npm run desktop:prepare && npm run pack:mac -w barcode-pos-desktop",
-    "desktop:pack:win": "npm run build && DESKTOP_PACK_PLATFORM=win32 DESKTOP_PACK_ARCH=x64 npm run desktop:prepare && npm run pack:win -w barcode-pos-desktop"
+    "desktop:pack:win": "npm run build && DESKTOP_PACK_PLATFORM=win32 DESKTOP_PACK_ARCH=x64 npm run desktop:prepare && npm run pack:win -w barcode-pos-desktop",
+    "desktop:icons": "bash scripts/generate-desktop-brand-assets.sh"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"

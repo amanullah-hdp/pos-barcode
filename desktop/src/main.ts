@@ -1,6 +1,20 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { app, BrowserWindow, dialog } from 'electron';
 import { loadOrCreateConfig, warnDefaultPin } from './config.js';
 import { DESKTOP_PORT, serverLogPath, startServer, stopServer, waitForHealth } from './serverProcess.js';
+
+const desktopRoot = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+
+function appIconPath(): string | undefined {
+  if (process.platform !== 'win32' && process.platform !== 'linux') {
+    return undefined;
+  }
+  if (app.isPackaged) {
+    return path.join(process.resourcesPath, 'icon.ico');
+  }
+  return path.join(desktopRoot, 'build', 'icon.ico');
+}
 
 const gotLock = app.requestSingleInstanceLock();
 if (!gotLock) {
@@ -26,6 +40,7 @@ async function showSplash(): Promise<void> {
     maximizable: false,
     title: 'Barcode POS',
     autoHideMenuBar: true,
+    icon: appIconPath(),
   });
   const html = encodeURIComponent(
     `<!DOCTYPE html><html><body style="font-family:Segoe UI,Arial,sans-serif;padding:24px;text-align:center">
@@ -59,6 +74,7 @@ async function createWindow(): Promise<void> {
       title: 'Barcode POS',
       autoHideMenuBar: true,
       show: false,
+      icon: appIconPath(),
       webPreferences: {
         contextIsolation: true,
         nodeIntegration: false,

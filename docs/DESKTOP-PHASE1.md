@@ -57,6 +57,21 @@ Local `npm run desktop:pack:win` on Mac **fails validation** after `desktop:prep
 
 The setup unpacks Electron + server `node_modules` (~80MB+). First install can take a few minutes on older PCs; that is normal for NSIS + embedded Node.
 
+### NSIS “Installer integrity check has failed” (uninstall / old setup)
+
+This usually means the **first `.exe` was not the Windows CI build** (e.g. packed on Mac, incomplete download, or copied through chat/cloud that altered the file). The uninstaller under `Program Files` can then fail the same check.
+
+**Remove the old install manually:**
+
+1. Close Barcode POS.
+2. **Settings → Apps → Installed apps** → uninstall **Barcode POS** if it appears (ignore NSIS errors).
+3. Delete the install folder (default often `C:\Program Files\Barcode POS` or the path you chose).
+4. Delete `%ProgramData%\BarcodePOS` only if you want a **fresh database** (skip if you need existing sales data).
+5. Remove Desktop / Start Menu shortcuts if any remain.
+6. Install again from the latest **Desktop Windows installer** artifact (not a Mac-built `.exe`).
+
+Branding (wizard sidebar + shortcut icon) comes from `data/uploads/logo.png` → run `bash scripts/generate-desktop-brand-assets.sh` after changing the logo, then rebuild the installer.
+
 ## Client install flow
 
 1. Run **BarcodePOS-Setup-x.y.z.exe**.

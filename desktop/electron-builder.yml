@@ -17,6 +17,8 @@ extraResources:
     to: client/dist
   - from: pack/server
     to: server
+  - from: build/icon.ico
+    to: icon.ico
 
 npmRebuild: false
 nodeGypRebuild: false
@@ -25,7 +27,10 @@ asar: true
 asarUnpack:
   - "**/node_modules/better-sqlite3/**"
 
+icon: build/icon.ico
+
 win:
+  icon: build/icon.ico
   target:
     - target: nsis
       arch:
@@ -40,6 +45,10 @@ nsis:
   createStartMenuShortcut: true
   shortcutName: Barcode POS
   uninstallDisplayName: Barcode POS
+  installerIcon: build/icon.ico
+  uninstallerIcon: build/icon.ico
+  installerHeader: build/installerHeader.bmp
+  installerSidebar: build/installerSidebar.bmp
 
 mac:
   target:
