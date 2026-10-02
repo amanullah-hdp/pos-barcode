@@ -57,6 +57,16 @@ Local `npm run desktop:pack:win` on Mac **fails validation** after `desktop:prep
 
 The setup unpacks Electron + server `node_modules` (~80MB+). First install can take a few minutes on older PCs; that is normal for NSIS + embedded Node.
 
+### “Barcode POS cannot be closed” during install
+
+The desktop app runs the API as a **second background process using the same `Barcode POS.exe`**. If an old copy is still running (or only the background server is left), the installer cannot overwrite files.
+
+**Before running Setup:**
+
+1. Exit Barcode POS from the window (File → Exit or close the window).
+2. Open **Task Manager** → end **every** **Barcode POS.exe** (there may be two).
+3. Run Setup again (newer builds also force-stop processes at the start of install).
+
 ### NSIS “Installer integrity check has failed” (uninstall / old setup)
 
 This usually means the **first `.exe` was not the Windows CI build** (e.g. packed on Mac, incomplete download, or copied through chat/cloud that altered the file). The uninstaller under `Program Files` can then fail the same check.

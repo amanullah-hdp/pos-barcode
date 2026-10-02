@@ -11,6 +11,7 @@ const LOG_NAME = 'desktop-server.log';
 
 let child: ChildProcessWithoutNullStreams | null = null;
 let logStream: fs.WriteStream | null = null;
+let stopPromise: Promise<void> | null = null;
 
 function appendLog(line: string): void {
   try {
@@ -29,13 +30,55 @@ export function serverLogPath(): string {
   return path.join(shopDataDir(), LOG_NAME);
 }
 
-export function stopServer(): void {
-  if (child) {
-    child.kill('SIGTERM');
-    child = null;
+export function isServerRunning(): boolean {
+  return child !== null;
+}
+
+function killProcessTreeWin32(pid: number): void {
+  spawn('taskkill', ['/PID', String(pid), '/T', '/F'], {
+    windowsHide: true,
+    stdio: 'ignore',
+  });
+}
+
+export function stopServer(): Promise<void> {
+  if (!child) {
+    return Promise.resolve();
   }
-  logStream?.end();
-  logStream = null;
+  if (stopPromise) {
+    return stopPromise;
+  }
+
+  const proc = child;
+  stopPromise = new Promise((resolve) => {
+    const finish = (): void => {
+      child = null;
+      stopPromise = null;
+      logStream?.end();
+      logStream = null;
+      resolve();
+    };
+
+    const forceKillTimer = setTimeout(() => {
+      if (proc.pid != null && process.platform === 'win32') {
+        killProcessTreeWin32(proc.pid);
+      } else {
+        proc.kill('SIGKILL');
+      }
+    }, 2500);
+
+    proc.once('exit', () => {
+      clearTimeout(forceKillTimer);
+      finish();
+    });
+
+    proc.kill('SIGTERM');
+    if (proc.pid != null && process.platform === 'win32') {
+      killProcessTreeWin32(proc.pid);
+    }
+  });
+
+  return stopPromise;
 }
 
 export function startServer(config: DesktopConfig): ChildProcessWithoutNullStreams {
@@ -91,10 +134,13 @@ export function startServer(config: DesktopConfig): ChildProcessWithoutNullStrea
     console.error('[server]', text);
     appendLog(`stderr: ${text}`);
   });
-  child.on('exit', (code) => {
+  const running = child;
+  running.on('exit', (code) => {
     appendLog(`Server exited with code ${code ?? 'null'}`);
     console.log('[server] exited', code);
-    child = null;
+    if (child === running) {
+      child = null;
+    }
   });
 
   return child;

@@ -1,7 +1,14 @@
 import path from 'node:path';
 import { app, BrowserWindow, dialog } from 'electron';
 import { loadOrCreateConfig, warnDefaultPin } from './config.js';
-import { DESKTOP_PORT, serverLogPath, startServer, stopServer, waitForHealth } from './serverProcess.js';
+import {
+  DESKTOP_PORT,
+  isServerRunning,
+  serverLogPath,
+  startServer,
+  stopServer,
+  waitForHealth,
+} from './serverProcess.js';
 
 function appIconPath(): string | undefined {
   if (process.platform !== 'win32' && process.platform !== 'linux') {
@@ -104,14 +111,19 @@ app.whenReady().then(() => {
 });
 
 app.on('window-all-closed', () => {
-  stopServer();
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+  void stopServer().then(() => {
+    if (process.platform !== 'darwin') {
+      app.quit();
+    }
+  });
 });
 
-app.on('before-quit', () => {
-  stopServer();
+app.on('before-quit', (event) => {
+  if (!isServerRunning()) {
+    return;
+  }
+  event.preventDefault();
+  void stopServer().then(() => app.quit());
 });
 
 app.on('activate', () => {

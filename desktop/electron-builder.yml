@@ -49,6 +49,7 @@ nsis:
   uninstallerIcon: build/icon.ico
   installerHeader: build/installerHeader.bmp
   installerSidebar: build/installerSidebar.bmp
+  include: build/installer.nsh
 
 mac:
   target:
