@@ -1,0 +1,21 @@
+{
+  "name": "barcode-pos-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Barcode POS — Electron shell (Windows installer)",
+  "main": "dist/main.js",
+  "scripts": {
+    "build:main": "tsc -p tsconfig.json",
+    "dev": "npm run build:main && electron .",
+    "pack:dir": "npm run build:main && electron-builder --dir",
+    "pack:mac": "npm run build:main && electron-builder --mac",
+    "pack:win": "npm run build:main && electron-builder --win nsis --x64"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "app-builder-bin": "^5.0.0-alpha.10",
+    "electron": "35.7.5",
+    "electron-builder": "^25.1.8",
+    "typescript": "^5.8.2"
+  }
+}

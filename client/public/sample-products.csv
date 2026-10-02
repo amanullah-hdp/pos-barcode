@@ -1,0 +1,5 @@
+sku,barcode,name,brand,category,cost,price,stock_qty,low_stock_threshold
+SKU-PERF-001,8901001001001,Blue Oud 50ml,Armaf,Perfume,3200,5500,12,3
+SKU-BELT-032,8901001001002,Leather Belt 32,Generic,Accessories,800,1500,8,2
+SKU-SHOE-42,8901001001003,White Sneaker 42,Nike,Footwear,4500,7200,5,2
+SKU-TEE-M,8901001001004,Cotton Tee Medium,Zara,Apparel,900,1800,20,5

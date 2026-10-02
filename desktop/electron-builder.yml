@@ -1,0 +1,50 @@
+electronVersion: "35.7.5"
+
+appId: com.cubexretail.barcodepos
+productName: Barcode POS
+copyright: Copyright © Cubex Retail
+
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*
+  - package.json
+
+extraResources:
+  - from: pack/client/dist
+    to: client/dist
+  - from: pack/server
+    to: server
+
+npmRebuild: false
+nodeGypRebuild: false
+
+asar: true
+asarUnpack:
+  - "**/node_modules/better-sqlite3/**"
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: BarcodePOS-Setup-${version}.${ext}
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  allowElevation: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Barcode POS
+  uninstallDisplayName: Barcode POS
+
+mac:
+  target:
+    - target: dir
+      arch:
+        - arm64
+        - x64
+  category: public.app-category.business

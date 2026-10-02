@@ -1,0 +1,10 @@
+node_modules/
+dist/
+client/dist/
+server/dist/
+*.sqlite
+*.sqlite-*
+.DS_Store
+.env
+desktop/pack/
+desktop/release/
