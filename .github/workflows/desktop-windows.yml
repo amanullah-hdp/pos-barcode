@@ -24,6 +24,9 @@ jobs:
         run: npm run build
 
       - name: Stage desktop pack
+        env:
+          DESKTOP_PACK_PLATFORM: win32
+          DESKTOP_PACK_ARCH: x64
         run: node scripts/prepare-desktop-pack.mjs
 
       - name: Build Electron main

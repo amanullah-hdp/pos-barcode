@@ -71,12 +71,18 @@ cpSync(path.join(root, 'server', 'package.json'), path.join(serverPack, 'package
 
 cpSync(path.join(root, 'client', 'dist'), clientPack, { recursive: true });
 
+const spawnShell = process.platform === 'win32';
+
 console.log('Installing production server dependencies into desktop/pack/server …');
 const npmInstall = spawnSync('npm', ['install', '--omit=dev', '--ignore-scripts'], {
   cwd: serverPack,
   stdio: 'inherit',
+  shell: spawnShell,
 });
 if (npmInstall.status !== 0) {
+  if (npmInstall.error) {
+    console.error(npmInstall.error.message);
+  }
   process.exit(npmInstall.status ?? 1);
 }
 
@@ -97,9 +103,12 @@ const rebuild = spawnSync(
     '-a',
     packArch,
   ],
-  { cwd: serverPack, stdio: 'inherit' },
+  { cwd: serverPack, stdio: 'inherit', shell: spawnShell },
 );
 if (rebuild.status !== 0) {
+  if (rebuild.error) {
+    console.error(rebuild.error.message);
+  }
   process.exit(rebuild.status ?? 1);
 }
 
