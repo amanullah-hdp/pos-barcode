@@ -41,7 +41,8 @@ The server uses **better-sqlite3** (native code). An `.exe` built on **macOS con
 
 1. GitHub → **Actions** → **Desktop Windows installer** → **Run workflow**  
    (or push tag `desktop-v1.0.0`)
-2. Download artifact **BarcodePOS-Setup-windows** and give **that** `.exe` to the client.
+2. **Shop PCs / other laptops:** open **[Releases → desktop-win-latest](https://github.com/amanullah-hdp/pos-barcode/releases/tag/desktop-win-latest)** and download **BarcodePOS-Setup-*.exe** (no GitHub login required on a public repo).
+3. **Developers only:** Actions → run → artifact **BarcodePOS-Setup-windows** (requires signing in to GitHub — that is why other laptops often fail if you share an Actions link).
 
 Local `npm run desktop:pack:win` on Mac **fails validation** after `desktop:prepare` unless you are on Windows.
 

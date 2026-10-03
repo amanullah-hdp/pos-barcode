@@ -6,6 +6,9 @@ on:
     tags:
       - 'desktop-v*'
 
+permissions:
+  contents: write
+
 jobs:
   build-win:
     runs-on: windows-latest
@@ -35,8 +38,30 @@ jobs:
       - name: Create NSIS installer
         run: npm run pack:win -w barcode-pos-desktop
 
-      - name: Upload installer
+      - name: Upload installer (Actions artifact — requires GitHub login)
         uses: actions/upload-artifact@v4
         with:
           name: BarcodePOS-Setup-windows
           path: desktop/release/*.exe
+
+      # Releases are public download links; Actions artifacts need a signed-in GitHub account.
+      - name: Publish installer to GitHub Releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          EXE=(desktop/release/*.exe)
+          if [ ! -f "${EXE[0]}" ]; then
+            echo "No installer found under desktop/release/"
+            exit 1
+          fi
+          TAG=desktop-win-latest
+          TITLE="Barcode POS — Windows installer (latest)"
+          NOTES="Automated build from workflow run ${GITHUB_RUN_ID} (${GITHUB_SHA:0:7}).\n\nUse this page to install on shop PCs without signing into GitHub Actions."
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --notes "$NOTES" --prerelease
+          else
+            gh release create "$TAG" --repo "$GITHUB_REPOSITORY" --title "$TITLE" --notes "$NOTES" --prerelease
+          fi
+          gh release upload "$TAG" "${EXE[@]}" --repo "$GITHUB_REPOSITORY" --clobber
