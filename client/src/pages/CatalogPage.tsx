@@ -218,7 +218,7 @@ export function CatalogPage() {
   }, []);
 
   return (
-    <div className="grid w-full gap-6 lg:grid-cols-2">
+    <div className="ui-split ui-split--2 w-full gap-4 sm:gap-6">
       <CatalogList title="Brands" list={brands} apiPath="/api/brands" onReload={reload} />
       <CatalogList title="Categories" list={categories} apiPath="/api/categories" onReload={reload} />
     </div>

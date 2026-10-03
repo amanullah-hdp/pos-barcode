@@ -58,7 +58,7 @@ export function ActivityPage() {
 
   return (
     <AdminPage description="Billing queue and order history.">
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="ui-toolbar mb-4">
         <button type="button" onClick={() => setTab('queue')} className={`rounded-full px-4 py-2 text-sm font-medium ${tab === 'queue' ? 'bg-[var(--primary)] text-white' : 'bg-white border border-[var(--border)]'}`}>
           Queue
         </button>
@@ -67,7 +67,7 @@ export function ActivityPage() {
         </button>
         {dayClosed ? <Badge tone="danger">Day closed</Badge> : <Badge tone="success">Open</Badge>}
       </div>
-      <div className="mb-4 flex flex-wrap items-center gap-2">
+      <div className="ui-toolbar mb-4">
         {tab === 'history' ? (
           <>
             <input type="date" className="field w-auto" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -96,7 +96,8 @@ export function ActivityPage() {
         ) : null}
       </div>
       <div className="surface overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="ui-table-wrap">
+        <table className="ui-table w-full text-sm">
           <thead className="bg-[var(--bg-subtle)] text-left text-xs text-[var(--text-muted)]">
             <tr>
               <th className="px-4 py-3">#</th>
@@ -147,6 +148,7 @@ export function ActivityPage() {
             ) : null}
           </tbody>
         </table>
+        </div>
       </div>
       {discountSaleId !== null ? (
         <DiscountEditModal

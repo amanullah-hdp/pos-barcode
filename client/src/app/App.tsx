@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthGate } from '../components/auth/AuthGate';
 import { AppShell } from '../components/layout/AppShell';
+import { LayoutProvider } from '../components/layout/LayoutProvider';
 import { ReceiptHost } from '../components/receipt/ReceiptHost';
 import { ActivityPage } from '../pages/ActivityPage';
 import { CatalogPage } from '../pages/CatalogPage';
@@ -18,23 +19,25 @@ export function App() {
   return (
     <BrowserRouter>
       <AuthGate>
-        <ReceiptHost />
-        <Routes>
-        <Route element={<AppShell />}>
-          <Route index element={<RegisterPage />} />
-          <Route path="activity" element={<ActivityPage />} />
-          <Route path="reports" element={<ReportsPage />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="catalog" element={<CatalogPage />} />
-          <Route path="staff" element={<StaffPage />} />
-          <Route path="import" element={<ImportPage />} />
-          <Route path="customers" element={<CustomersPage />} />
-          <Route path="close" element={<ClosePage />} />
-          <Route path="exports" element={<ExportsPage />} />
-          <Route path="settings" element={<SettingsPage />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Route>
-        </Routes>
+        <LayoutProvider>
+          <ReceiptHost />
+          <Routes>
+            <Route element={<AppShell />}>
+              <Route index element={<RegisterPage />} />
+              <Route path="activity" element={<ActivityPage />} />
+              <Route path="reports" element={<ReportsPage />} />
+              <Route path="products" element={<ProductsPage />} />
+              <Route path="catalog" element={<CatalogPage />} />
+              <Route path="staff" element={<StaffPage />} />
+              <Route path="import" element={<ImportPage />} />
+              <Route path="customers" element={<CustomersPage />} />
+              <Route path="close" element={<ClosePage />} />
+              <Route path="exports" element={<ExportsPage />} />
+              <Route path="settings" element={<SettingsPage />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Route>
+          </Routes>
+        </LayoutProvider>
       </AuthGate>
     </BrowserRouter>
   );

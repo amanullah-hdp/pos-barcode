@@ -26,7 +26,7 @@ export function SettingsPage() {
 
   return (
     <form
-      className="grid w-full gap-6 lg:grid-cols-2"
+      className="ui-split ui-split--2 w-full gap-4 sm:gap-6"
       onSubmit={(e) => {
         e.preventDefault();
         void api.put<Settings>('/api/settings', form).then((s) => {

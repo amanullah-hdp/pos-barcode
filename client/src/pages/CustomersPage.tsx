@@ -14,7 +14,7 @@ export function CustomersPage() {
   }, []);
 
   return (
-    <div className="grid w-full gap-6 lg:grid-cols-2">
+    <div className="ui-split ui-split--2 w-full gap-4 sm:gap-6">
       <div className="space-y-6">
         <form
           className="surface space-y-3 p-5"

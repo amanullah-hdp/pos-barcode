@@ -85,7 +85,8 @@ export function ProductsPage() {
         </Button>
       </div>
       <div className="surface overflow-hidden">
-        <table className="w-full text-sm">
+        <div className="ui-table-wrap">
+        <table className="ui-table w-full text-sm">
           <thead className="bg-[var(--bg-subtle)] text-left text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
             <tr>
               <th className="px-4 py-3">SKU</th>
@@ -142,6 +143,7 @@ export function ProductsPage() {
             ) : null}
           </tbody>
         </table>
+        </div>
       </div>
       {panel ? (
         <div className="fixed inset-0 z-50 flex justify-end bg-black/30">

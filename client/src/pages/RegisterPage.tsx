@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { Modal } from '../components/ui/Modal';
 import { SearchField } from '../components/ui/SearchField';
 import { Button } from '../components/ui/Button';
+import { RegisterWorkspace } from '../components/register/RegisterWorkspace';
+import { RegisterCategories } from '../features/register/RegisterCategories';
 import { ProductCard } from '../features/register/ProductCard';
 import { CartPanel, type CartLine, type CartPanelHandle } from '../features/register/CartPanel';
 import { useRegisterBillingShortcuts } from '../features/register/useRegisterBillingShortcuts';
@@ -414,112 +416,97 @@ export function RegisterPage() {
           <code className="rounded bg-white/80 px-1">npm run build && npm run dev</code> from the project root.
         </div>
       ) : null}
-      <div className="surface-elevated flex min-h-0 w-full flex-1 overflow-hidden">
-        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
-          <div className="shrink-0 space-y-4 border-b border-[var(--border)] px-4 py-4 sm:px-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="rounded-full bg-[var(--bg-subtle)] px-3 py-1.5 font-medium ring-1 ring-[var(--border)]">
-                  {new Date().toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-                <span
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 font-medium ${dayClosed ? 'bg-[var(--danger-soft)] text-[var(--danger)]' : 'bg-[var(--success-soft)] text-[var(--success)]'}`}
-                >
-                  <span className={`h-2 w-2 rounded-full ${dayClosed ? 'bg-[var(--danger)]' : 'bg-[var(--success)]'}`} />
-                  {dayClosed ? 'Day closed' : 'Open order'}
-                </span>
-              </div>
-              <Link
-                to="/close"
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--danger)] shadow-sm transition hover:shadow-md"
-              >
-                <Power className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <div className="flex gap-2 overflow-x-auto pb-0.5">
-              {categories.map((c) => {
-                const Icon = categoryIcon(c.name);
-                const active = category === c.name;
-                return (
-                  <button
-                    key={c.name}
-                    type="button"
-                    onClick={() => setCategory(c.name)}
-                    className={`flex min-w-[5.75rem] shrink-0 flex-col items-center rounded-2xl border px-3 py-3 text-center transition-all duration-200 ${
-                      active
-                        ? 'border-[var(--primary)] bg-[var(--primary-soft)] shadow-sm'
-                        : 'border-[var(--border)] bg-white hover:border-[var(--border-strong)]'
-                    }`}
-                  >
-                    <span className={`flex h-9 w-9 items-center justify-center rounded-xl ${active ? 'bg-[var(--primary)] text-white' : 'bg-[var(--bg-subtle)] text-[var(--text-secondary)]'}`}>
-                      <Icon className="h-4 w-4" strokeWidth={1.75} />
-                    </span>
-                    <span className="mt-2 text-xs font-semibold">{c.name}</span>
-                    <span className="text-[10px] text-[var(--text-muted)]">{c.count} items</span>
-                  </button>
-                );
-              })}
-            </div>
-
-            <form onSubmit={onScanSubmit}>
-              <SearchField
-                ref={scanRef}
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Scan barcode or search…"
-                disabled={dayClosed}
-                autoComplete="off"
-                spellCheck={false}
-              />
-            </form>
-          </div>
-
-          <div className="min-h-0 flex-1 overflow-y-auto px-4 py-4 sm:px-5">
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-              {filtered.map((p) => (
-                <ProductCard
-                  key={p.id}
-                  product={p}
-                  remaining={remainingStock(p, cart)}
+      <RegisterWorkspace
+        cart={cartUi}
+        catalog={
+          <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+            <div className="register-toolbar register-toolbar--adaptive shrink-0 space-y-3">
+              <form className="register-toolbar__search" onSubmit={onScanSubmit}>
+                <SearchField
+                  ref={scanRef}
+                  compact
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Scan barcode or search…"
                   disabled={dayClosed}
-                  onOpen={() => {
-                    if (remainingStock(p, cart) <= 0) {
-                      setError(
-                        p.stock_qty <= 0
-                          ? `${p.name} is out of stock.`
-                          : `${p.name}: all available stock is already in the cart.`,
-                      );
-                      return;
-                    }
-                    setModalProduct(p);
-                    setModalQty(1);
-                  }}
-                  onQuickAdd={() => addLine(p)}
+                  autoComplete="off"
+                  spellCheck={false}
                 />
-              ))}
-            </div>
-
-            {recentSales.length > 0 ? (
-              <div className="mt-6 border-t border-[var(--border)] pt-4">
-                <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">Track order</p>
-                <div className="flex gap-2 overflow-x-auto pb-1">
-                  {recentSales.map((s) => (
-                    <div key={s.receipt_number} className="surface min-w-[11rem] shrink-0 px-3 py-2.5 text-xs">
-                      <p className="font-semibold">{s.customer_name ?? 'Walk-in'}</p>
-                      <p className="mt-0.5 text-[var(--text-muted)]">
-                        #{s.receipt_number} · {formatPkr(s.total_cents)}
-                      </p>
-                    </div>
-                  ))}
+              </form>
+              <div className="register-toolbar__top flex flex-wrap items-center justify-between gap-3">
+                <div className="register-toolbar__status flex items-center gap-2 text-sm">
+                  <span className="rounded-full bg-[var(--bg-subtle)] px-3 py-1.5 font-medium ring-1 ring-[var(--border)]">
+                    {new Date().toLocaleTimeString('en-PK', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                  <span
+                    className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 font-medium ${dayClosed ? 'bg-[var(--danger-soft)] text-[var(--danger)]' : 'bg-[var(--success-soft)] text-[var(--success)]'}`}
+                  >
+                    <span className={`h-2 w-2 rounded-full ${dayClosed ? 'bg-[var(--danger)]' : 'bg-[var(--success)]'}`} />
+                    {dayClosed ? 'Day closed' : 'Open order'}
+                  </span>
+                </div>
+                <div className="register-toolbar__actions">
+                  <Link
+                    to="/close"
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-[var(--border)] bg-white text-[var(--danger)] shadow-sm transition hover:shadow-md"
+                  >
+                    <Power className="h-4 w-4" />
+                  </Link>
                 </div>
               </div>
-            ) : null}
-          </div>
-        </div>
 
-        <aside className="hidden h-full w-[var(--cart-w)] shrink-0 border-l border-[var(--border)] lg:block">{cartUi}</aside>
-      </div>
+              <RegisterCategories
+                categories={categories}
+                active={category}
+                onSelect={setCategory}
+                iconFor={categoryIcon}
+              />
+            </div>
+
+            <div className="register-product-scroll min-h-0 flex-1 overflow-y-auto px-3 py-3 sm:px-4">
+              <div className="register-product-grid">
+                {filtered.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    product={p}
+                    remaining={remainingStock(p, cart)}
+                    disabled={dayClosed}
+                    onOpen={() => {
+                      if (remainingStock(p, cart) <= 0) {
+                        setError(
+                          p.stock_qty <= 0
+                            ? `${p.name} is out of stock.`
+                            : `${p.name}: all available stock is already in the cart.`,
+                        );
+                        return;
+                      }
+                      setModalProduct(p);
+                      setModalQty(1);
+                    }}
+                    onQuickAdd={() => addLine(p)}
+                  />
+                ))}
+              </div>
+
+              {recentSales.length > 0 ? (
+                <div className="register-track-orders mt-4 border-t border-[var(--border)] pt-3">
+                  <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-[var(--text-muted)]">Track order</p>
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {recentSales.map((s) => (
+                      <div key={s.receipt_number} className="surface min-w-[11rem] shrink-0 px-3 py-2.5 text-xs">
+                        <p className="font-semibold">{s.customer_name ?? 'Walk-in'}</p>
+                        <p className="mt-0.5 text-[var(--text-muted)]">
+                          #{s.receipt_number} · {formatPkr(s.total_cents)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </div>
+        }
+      />
 
       <div className="fixed bottom-14 left-0 right-0 z-20 border-t border-[var(--border)] bg-white/95 p-3 backdrop-blur lg:hidden">
         <Button variant="primary" fullWidth onClick={() => setMobileCartOpen(true)}>

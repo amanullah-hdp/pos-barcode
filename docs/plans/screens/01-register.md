@@ -18,7 +18,7 @@ Primary till: find product → build cart → take payment → print receipt. Mu
 │          │ ┌────┐ ┌────┐ ┌────┐ ┌────┐        │ line items      │
 │          │ │img │ │img │ │img │ │img │        │ qty +/-         │
 │          │ └────┘ └────┘ └────┘ └────┘        │ ─────────────── │
-│          │ ... grid 4-5 cols                   │ Subtotal        │
+│          │ ... grid (3–5 cols via layout.css)    │ Subtotal        │
 │          │ [Track: Mike | Billie | ...]        │ TOTAL (bold)    │
 │          │                                     │ [Pay tiles]     │
 │          │                                     │ [Complete sale] │

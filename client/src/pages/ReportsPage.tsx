@@ -59,14 +59,14 @@ export function ReportsPage() {
         />
       {report ? (
         <>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="ui-grid-metrics">
             <StatCard label="Total sales" value={formatPkr(report.summary.total_cents)} />
             <StatCard label="Transactions" value={report.summary.sale_count} />
             <StatCard label="Items sold" value={itemsSold} />
             <StatCard label="Avg ticket" value={formatPkr(Math.round(avg))} />
           </div>
-          <div className="grid gap-6 lg:grid-cols-5">
-            <div className="surface p-5 lg:col-span-3">
+          <div className="ui-split ui-split--2">
+            <div className="surface min-w-0 p-4 sm:p-5">
               <h2 className="mb-4 font-semibold">Report graph</h2>
               <svg viewBox="0 0 400 120" className="h-40 w-full text-[var(--primary)]">
                 {chartPoints.length > 1 ? (
@@ -90,7 +90,7 @@ export function ReportsPage() {
                 )}
               </svg>
             </div>
-            <div className="surface p-5 lg:col-span-2">
+            <div className="surface min-w-0 p-4 sm:p-5">
               <h2 className="mb-4 font-semibold">Favorite products</h2>
               <ul className="space-y-3">
                 {report.by_product.slice(0, 6).map((p) => {
@@ -111,7 +111,8 @@ export function ReportsPage() {
           </div>
           <div className="surface overflow-hidden">
             <h2 className="border-b border-[var(--border)] px-5 py-4 font-semibold">All orders</h2>
-            <table className="w-full text-sm">
+            <div className="ui-table-wrap">
+            <table className="ui-table w-full text-sm">
               <thead className="bg-[var(--bg-subtle)] text-left text-xs text-[var(--text-muted)]">
                 <tr>
                   <th className="px-4 py-3">#</th>
@@ -131,6 +132,7 @@ export function ReportsPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
         </>
       ) : (

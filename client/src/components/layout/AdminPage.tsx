@@ -4,7 +4,7 @@ export function AdminPage({ description, actions, children }: { description?: st
   return (
     <div className="animate-in w-full">
       {description || actions ? (
-        <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
+        <div className="admin-page-intro mb-6 flex flex-wrap items-start justify-between gap-4">
           {description ? <p className="max-w-3xl text-sm leading-relaxed text-[var(--text-secondary)]">{description}</p> : <span />}
           {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
         </div>

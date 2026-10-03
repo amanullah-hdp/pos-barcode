@@ -1,0 +1,77 @@
+/**
+ * Generic responsive primitives (admin pages, tables, toolbars).
+ * App shell + register layout lives in layout.css.
+ */
+
+.ui-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.ui-table {
+  min-width: 36rem;
+}
+
+.ui-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ui-grid-auto {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
+}
+
+.ui-grid-metrics {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+}
+
+.ui-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.ui-split {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .ui-split {
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ui-split--2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 639px) {
+  .ui-hide-mobile {
+    display: none !important;
+  }
+}
+
+html[data-density='compact'] .admin-page-intro {
+  margin-bottom: 1rem !important;
+}
+
+html[data-density='compact'] .product-card-body {
+  padding: 0.625rem !important;
+}
+
+html[data-density='compact'] .product-card-quick-add {
+  height: 2rem;
+  width: 2rem;
+}
