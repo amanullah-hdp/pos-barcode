@@ -88,6 +88,9 @@ export function SettingsPage() {
           Upload logo
           <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && void uploadLogo(e.target.files[0]).then(setForm)} />
         </label>
+        <p className="mt-2 text-xs text-[var(--text-muted)]">
+          Each Windows till stores its own logo under shop data — upload here inside the desktop app (not only on the web dev server).
+        </p>
       </div>
       <div className="surface p-5 lg:col-span-2">
         <h2 className="mb-1 text-base font-semibold">Payment methods</h2>

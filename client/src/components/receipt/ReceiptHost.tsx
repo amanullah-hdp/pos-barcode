@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ReceiptPayload } from '../../lib/api';
-import { receiptLogoSrc, waitForImages } from '../../lib/receiptLogo';
+import { prepareReceiptLogoForPrint, waitForImages } from '../../lib/receiptLogo';
 import { ReceiptPrint } from './ReceiptPrint';
 
 export function ReceiptHost() {
   const [payload, setPayload] = useState<ReceiptPayload | null>(null);
+  const [logoSrc, setLogoSrc] = useState<string | null>(null);
+  const [logoReady, setLogoReady] = useState(false);
   const hostRef = useRef<HTMLDivElement>(null);
+  const printRequestedRef = useRef(false);
 
   useEffect(() => {
     const h = (e: Event) => setPayload((e as CustomEvent<ReceiptPayload>).detail);
@@ -14,9 +17,46 @@ export function ReceiptHost() {
   }, []);
 
   useEffect(() => {
-    if (!payload) return;
+    if (!payload) {
+      setLogoSrc(null);
+      setLogoReady(false);
+      printRequestedRef.current = false;
+      return;
+    }
 
     let cancelled = false;
+    setLogoReady(!payload.settings.logo_url && !payload.settings.logo_data_url);
+
+    void prepareReceiptLogoForPrint(payload.settings).then((src) => {
+      if (!cancelled) {
+        setLogoSrc(src);
+        if (!src) setLogoReady(true);
+      }
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [payload]);
+
+  useEffect(() => {
+    if (!logoSrc) return;
+    const markIfLoaded = () => {
+      const img = hostRef.current?.querySelector('img.receipt-logo');
+      if (img instanceof HTMLImageElement && img.complete && img.naturalWidth > 0) {
+        setLogoReady(true);
+      }
+    };
+    markIfLoaded();
+    const id = window.requestAnimationFrame(markIfLoaded);
+    return () => window.cancelAnimationFrame(id);
+  }, [logoSrc]);
+
+  useEffect(() => {
+    if (!payload || !logoReady || printRequestedRef.current) return;
+
+    let cancelled = false;
+    printRequestedRef.current = true;
 
     const onAfterPrint = () => {
       setPayload(null);
@@ -39,7 +79,7 @@ export function ReceiptHost() {
       cancelled = true;
       window.removeEventListener('afterprint', onAfterPrint);
     };
-  }, [payload]);
+  }, [payload, logoReady]);
 
   if (!payload) return null;
 
@@ -61,7 +101,8 @@ export function ReceiptHost() {
           staff_id: payload.sale.staff_code ?? '—',
           cashier_name: payload.sale.staff_name ?? '—',
         }}
-        logoSrc={receiptLogoSrc(s)}
+        logoSrc={logoSrc}
+        onLogoReady={() => setLogoReady(true)}
         receiptNumber={payload.sale.receipt_number}
         createdAt={payload.sale.created_at}
         paymentMethod={payload.sale.payment_method}

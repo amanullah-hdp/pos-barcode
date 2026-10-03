@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import { logoFilePath } from './dataDir.js';
 
-function mimeForLogoBuffer(buf: Buffer): string {
+export function mimeForLogoBuffer(buf: Buffer): string {
   if (buf.length >= 2 && buf[0] === 0xff && buf[1] === 0xd8) return 'image/jpeg';
   if (buf.length >= 4 && buf[0] === 0x89 && buf[1] === 0x50 && buf[2] === 0x4e && buf[3] === 0x47) {
     return 'image/png';

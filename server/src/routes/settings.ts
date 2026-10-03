@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import multer from 'multer';
 import { getDb, getSettingsRow } from '../db.js';
 import { logoFilePath } from '../utils/dataDir.js';
+import { logoFileExists, mimeForLogoBuffer } from '../utils/receiptLogo.js';
 import { settingsForClient } from '../utils/settingsDto.js';
 
 const upload = multer({
@@ -18,12 +19,14 @@ router.get('/', (_req, res) => {
 
 router.get('/logo', (_req, res) => {
   const file = logoFilePath();
-  if (!fs.existsSync(file)) {
+  if (!logoFileExists()) {
     res.status(404).end();
     return;
   }
-  res.setHeader('Cache-Control', 'public, max-age=300');
-  res.sendFile(file);
+  const buf = fs.readFileSync(file);
+  res.setHeader('Cache-Control', 'no-store');
+  res.type(mimeForLogoBuffer(buf));
+  res.send(buf);
 });
 
 router.post('/logo', upload.single('logo'), (req, res) => {

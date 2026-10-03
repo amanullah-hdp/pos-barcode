@@ -65,6 +65,7 @@ export function ReceiptPrint(props: {
     sku?: string | null;
   }[];
   totalCents: number;
+  onLogoReady?: () => void;
 }) {
   const { settings: s } = props;
   const itemQty = props.lines.reduce((n, l) => n + l.qty, 0);
@@ -85,7 +86,14 @@ export function ReceiptPrint(props: {
   return (
     <div className="receipt-print">
       {props.logoSrc ? (
-        <img src={props.logoSrc} alt="" className="receipt-logo" decoding="sync" />
+        <img
+          src={props.logoSrc}
+          alt=""
+          className="receipt-logo"
+          decoding="sync"
+          onLoad={() => props.onLogoReady?.()}
+          onError={() => props.onLogoReady?.()}
+        />
       ) : (
         <ReceiptBrandLogo label={s.receipt_brand || 'BARCODE'} />
       )}
