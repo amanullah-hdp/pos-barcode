@@ -8,6 +8,8 @@ export type Settings = {
   address: string;
   phone: string;
   logo_url: string | null;
+  /** Present on checkout/reprint payloads — embedded for reliable thermal print. */
+  logo_data_url?: string | null;
   receipt_footer: string;
   receipt_brand: string;
   till_no: string;

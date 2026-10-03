@@ -1,5 +1,5 @@
 import { getDb } from '../db.js';
-import { settingsForClient } from '../utils/settingsDto.js';
+import { settingsForReceipt } from '../utils/settingsDto.js';
 import { saleLinesForReceipt } from '../utils/saleLinesDto.js';
 import { assertWholeRupeeCents, computeSaleAmounts } from './discounts.js';
 
@@ -78,7 +78,7 @@ export function updateSaleDiscounts(saleId: number, payload: UpdateDiscountsPayl
     return {
       sale: updatedSale,
       lines,
-      settings: settingsForClient(),
+      settings: settingsForReceipt(),
       customer_name,
       amounts,
     };

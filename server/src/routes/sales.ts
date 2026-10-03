@@ -4,7 +4,7 @@ import { checkout, reopenDay, type CheckoutPayload } from '../services/checkout.
 import { updateSaleDiscounts, type UpdateDiscountsPayload } from '../services/saleDiscounts.js';
 import { getDb } from '../db.js';
 import { saleLinesForReceipt } from '../utils/saleLinesDto.js';
-import { settingsForClient } from '../utils/settingsDto.js';
+import { settingsForReceipt } from '../utils/settingsDto.js';
 
 const router = Router();
 
@@ -19,7 +19,7 @@ function receiptPayload(sale: unknown, saleId: number) {
       | undefined;
     customer_name = c?.name ?? null;
   }
-  return { sale, lines, settings: settingsForClient(), customer_name };
+  return { sale, lines, settings: settingsForReceipt(), customer_name };
 }
 
 router.get('/', (req, res) => {

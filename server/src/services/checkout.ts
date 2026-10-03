@@ -1,6 +1,6 @@
 import { getDb, getSettingsRow, isDayClosedForToday, parsePaymentMethods, todayBusinessDate } from '../db.js';
 import { computeSaleAmounts } from './discounts.js';
-import { settingsForClient } from '../utils/settingsDto.js';
+import { settingsForReceipt } from '../utils/settingsDto.js';
 import { saleLinesForReceipt } from '../utils/saleLinesDto.js';
 import { syncReceiptSequence } from '../utils/receiptSeq.js';
 
@@ -223,7 +223,7 @@ export function checkout(payload: CheckoutPayload) {
     return {
       sale,
       lines,
-      settings: settingsForClient(),
+      settings: settingsForReceipt(),
       business_date: todayBusinessDate(),
       customer_name,
     };

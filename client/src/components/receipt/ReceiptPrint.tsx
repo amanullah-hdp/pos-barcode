@@ -49,7 +49,7 @@ function SummaryRow(props: { label: string; value: string; amountDue?: boolean }
 
 export function ReceiptPrint(props: {
   settings: ReceiptPrintSettings;
-  logoUrl: string | null;
+  logoSrc: string | null;
   receiptNumber: number;
   createdAt: string;
   paymentMethod: string;
@@ -84,8 +84,8 @@ export function ReceiptPrint(props: {
 
   return (
     <div className="receipt-print">
-      {props.logoUrl ? (
-        <img src={props.logoUrl} alt="" className="receipt-logo" />
+      {props.logoSrc ? (
+        <img src={props.logoSrc} alt="" className="receipt-logo" decoding="sync" />
       ) : (
         <ReceiptBrandLogo label={s.receipt_brand || 'BARCODE'} />
       )}
